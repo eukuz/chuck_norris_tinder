@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "209451477228",
+    "project_id": "chucknorristinder-30dee",
+    "storage_bucket": "chucknorristinder-30dee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209451477228:android:429dba4427f36dd0faddc9",
+        "android_client_info": {
+          "package_name": "com.example.chuck_norris_tinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209451477228-u9q7meqbvjr2f903cmip88vdv5o0ephg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv_Gc0MdxIcNiawLgUbN96LNqLljMGs68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209451477228-u9q7meqbvjr2f903cmip88vdv5o0ephg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
