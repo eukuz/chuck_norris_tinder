@@ -7,12 +7,15 @@ Let's see how you like his jokes!
 That's a simple tinder-like application: to react you can swipe or press buttons below
 
 ## Screenshots
-Chuck's face changes depending on your reactions
+
+Chuck's face changes depending on your reactions:
+
 ![face1](https://github.com/eukuz/chuck_norris_tinder/blob/master/assets/scr1.jpg)
 ![face5](https://github.com/eukuz/chuck_norris_tinder/blob/master/assets/scr2.jpg)
+
 Find all the emotions, but beware his wrath!
 
-You can get [apk from here](url) and try in yourself!
+You can get [apk from here](https://github.com/eukuz/chuck_norris_tinder/blob/master/app-release.apk) and try in yourself!
 
 ## Developer screen
 ![developer screen](https://github.com/eukuz/chuck_norris_tinder/blob/master/assets/scr3.jpg)
