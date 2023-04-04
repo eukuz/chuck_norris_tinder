@@ -1,10 +1,16 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'favs.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -27,15 +33,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -141,17 +138,30 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           )),
                       Expanded(
-                          flex: 1,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => const AlertDialog(
-                                        title: Text('Developer info'),
-                                        content: DeveloperInfo(),
-                                      ));
-                            },
-                            child: const Icon(Icons.account_circle),
+                          flex: 2,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => const AlertDialog(
+                                            title: Text('Developer info'),
+                                            content: DeveloperInfo(),
+                                          ));
+                                },
+                                icon: const Icon(Icons.account_circle),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const FavoriteJokes(),
+                                  );
+                                },
+                                icon: const Icon(Icons.star),
+                              )
+                            ],
                           ))
                     ],
                   ),
@@ -203,6 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _createNextCard();
     switch (direction) {
       case CardSwiperDirection.right:
+        FirebaseFirestore.instance.collection('jokes').add({'joke': _joke});
         _incrementCounter();
         break;
       default:
