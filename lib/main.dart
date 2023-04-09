@@ -44,14 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int _rate = 0;
   final CardSwiperController controller = CardSwiperController();
-  String _joke =
-      "Welcome to the chuck Norris tinder!\r\nSwipe right if you like the PUNCHline\r\n👊👊👊👊👊👊👊👊";
+  List<Joke> jokes = [Joke(
+      joke: "Welcome to the chuck Norris tinder!\r\nSwipe right if you like the PUNCHline\r\n👊👊👊👊👊👊👊👊",
+      id: '')];
   Uri url = Uri.parse('https://api.chucknorris.io/jokes/random');
   List<Container> cards = [];
 
   @override
   initState() {
-    _addCard(_joke);
+    _addCard(jokes.last.joke);
     _addJoke();
     super.initState();
   }
@@ -87,11 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<String> _addJoke() async {
     var response = await http.get(url);
-    var joke = json.decode(response.body)['value'];
+    var text = json.decode(response.body)['value'];
     setState(() {
-      _joke = joke;
+      jokes.add(Joke(id: json.decode(response.body)['id'], joke: text));
     });
-    return joke;
+    return text;
   }
 
   void _decrementCounter() {
@@ -101,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _createNextCard() {
-    _addCard(_joke);
+    _addCard(jokes.last.joke);
     if (cards.isNotEmpty) {
       cards.removeAt(0);
     }
@@ -116,109 +117,122 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
           child: SafeArea(
-        bottom: true,
-        top: true,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                          flex: 5,
-                          child: Text(
-                            '$_rate/$_counter of Chuck jokes were fun',
-                            style: const TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.black45,
-                            ),
-                          )),
-                      Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => const AlertDialog(
+            bottom: true,
+            top: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                              flex: 5,
+                              child: Text(
+                                '$_rate/$_counter of Chuck jokes were fun',
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.black45,
+                                ),
+                              )),
+                          Expanded(
+                              flex: 2,
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                          const AlertDialog(
                                             title: Text('Developer info'),
                                             content: DeveloperInfo(),
                                           ));
-                                },
-                                icon: const Icon(Icons.account_circle),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => const FavoriteJokes(),
-                                  );
-                                },
-                                icon: const Icon(Icons.star),
-                              )
-                            ],
-                          ))
-                    ],
+                                    },
+                                    icon: const Icon(Icons.account_circle),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) => const FavoriteJokes(),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.star),
+                                  )
+                                ],
+                              ))
+                        ],
+                      ),
+                    )),
+                Expanded(
+                  flex: 10,
+                  child: CardSwiper(
+                    controller: controller,
+                    cards: cards,
+                    isVerticalSwipingEnabled: false,
+                    onSwipe: _swipe,
+                    padding: const EdgeInsets.all(24.0),
                   ),
-                )),
-            Expanded(
-              flex: 10,
-              child: CardSwiper(
-                controller: controller,
-                cards: cards,
-                isVerticalSwipingEnabled: false,
-                onSwipe: _swipe,
-                padding: const EdgeInsets.all(24.0),
-              ),
+                ),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  controller.swipeLeft();
+                                },
+                                child: const Icon(Icons.thumb_down),
+                              ),
+                              // This trailing comma makes auto-formatting nicer for build methods.
+                            )),
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  controller.swipeRight();
+                                },
+                                child: const Icon(Icons.thumb_up),
+                              ),
+                            )),
+                      ],
+                    )),
+              ],
             ),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.swipeLeft();
-                        },
-                        child: const Icon(Icons.thumb_down),
-                      ),
-                      // This trailing comma makes auto-formatting nicer for build methods.
-                    )),
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.swipeRight();
-                        },
-                        child: const Icon(Icons.thumb_up),
-                      ),
-                    )),
-                  ],
-                )),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
-  void _swipe(int index, CardSwiperDirection direction) {
+  Future<void> _swipe(int index, CardSwiperDirection direction) async {
     _createNextCard();
     switch (direction) {
       case CardSwiperDirection.right:
-        FirebaseFirestore.instance.collection('jokes').add({'joke': _joke});
+        if (jokes.length > _counter && jokes[_counter].id.isNotEmpty ) {
+          if (!await (jokeExists(jokes[_counter].id))) {
+            FirebaseFirestore.instance.collection('jokes').add(
+                {'joke': jokes[_counter].joke, 'id': jokes[_counter].id});
+          }
+        }
+
         _incrementCounter();
         break;
       default:
         _decrementCounter();
     }
+  }
+
+  Future<bool> jokeExists(String jokeId) async {
+    final snapshot =
+    await FirebaseFirestore.instance.collection('jokes').doc(jokeId).get();
+    return snapshot.exists;
   }
 }
 
@@ -273,14 +287,16 @@ class DeveloperInfo extends StatelessWidget {
               child: Text('Telegram @eukuz', style: TextStyle(fontSize: 20))),
           Expanded(
               child: InkWell(
-            onTap: () => launchUrl(
-                Uri.parse('mailto:e.kuzyakhmetov@innopolis.university')),
-            child: const Text(
-              'Or email me here !',
-              style: TextStyle(
-                  decoration: TextDecoration.underline, color: Colors.blue),
-            ),
-          )),
+                onTap: () =>
+                    launchUrl(
+                        Uri.parse(
+                            'mailto:e.kuzyakhmetov@innopolis.university')),
+                child: const Text(
+                  'Or email me here !',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline, color: Colors.blue),
+                ),
+              )),
         ],
       ),
     );
